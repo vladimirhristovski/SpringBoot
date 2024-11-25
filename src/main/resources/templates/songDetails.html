@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Song Details</title>
+
+</head>
+<body>
+<header>
+    <h1>Song title:
+        <th:block th:text="${song.getTitle()}"></th:block>
+    </h1>
+</header>
+<section>
+    <h2>Genre:
+        <th:block th:text="${song.getGenre()}"></th:block>
+    </h2>
+    <h2>Year:
+        <th:block th:text="${song.getReleaseYear()}"></th:block>
+    </h2>
+    <h2>Album:
+        <th:block th:text="${song.getAlbum().getName()}"></th:block>
+    </h2>
+    <h2>Performers:</h2>
+    <ul>
+        <li th:each="artist : ${song.getPerformers()}">
+            <th:block th:text="${artist.getFirstName()}"></th:block>
+
+            <th:block th:text="${artist.getLastName()}"></th:block>
+            <br>
+        </li>
+    </ul>
+</section>
+<form th:action="@{/songs}" th:method="GET">
+    <input type="submit" value="Back to Songs list">
+</form>
+
+<form th:action="@{/artist}" th:method="GET">
+    <input type="hidden" name="trackId" th:value="${song.getId()}"/>
+    <input type="submit" value="Back to Artist list">
+</form>
+</body>
+</html>
