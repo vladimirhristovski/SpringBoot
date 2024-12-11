@@ -4,17 +4,18 @@ import mk.ukim.finki.wpaud.model.User;
 import mk.ukim.finki.wpaud.model.exceptions.InvalidArgumentsException;
 import mk.ukim.finki.wpaud.model.exceptions.InvalidUserCredentialsException;
 import mk.ukim.finki.wpaud.model.exceptions.PasswordsDoNotMatchException;
-import mk.ukim.finki.wpaud.repository.InMemoryUserRepository;
+import mk.ukim.finki.wpaud.model.exceptions.UsernameAlreadyExistsException;
+import mk.ukim.finki.wpaud.repository.jpa.UserRepository;
 import mk.ukim.finki.wpaud.service.AuthService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final InMemoryUserRepository inMemoryUserRepository;
+    private final UserRepository userRepository;
 
-    public AuthServiceImpl(InMemoryUserRepository inMemoryUserRepository) {
-        this.inMemoryUserRepository = inMemoryUserRepository;
+    public AuthServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -22,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
             throw new InvalidArgumentsException();
         }
-        return this.inMemoryUserRepository.findByUsernameAndPassword(username, password).orElseThrow(InvalidUserCredentialsException::new);
+        return this.userRepository.findByUsernameAndPassword(username, password).orElseThrow(InvalidUserCredentialsException::new);
     }
 
     @Override
@@ -33,7 +34,12 @@ public class AuthServiceImpl implements AuthService {
         if (!password.equals(repeatPassword)) {
             throw new PasswordsDoNotMatchException();
         }
+
+        if (this.userRepository.findByUsername(username).isPresent() || !this.userRepository.findByUsername(username).isEmpty()) {
+            throw new UsernameAlreadyExistsException(username);
+        }
+
         User user = new User(username, password, name, surname);
-        return this.inMemoryUserRepository.saveOrUpdate(user);
+        return this.userRepository.save(user);
     }
 }
