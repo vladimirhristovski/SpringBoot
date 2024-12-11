@@ -17,5 +17,7 @@ public interface SongService {
 
     void deleteById(Long id);
 
+    List<Song> findByAlbumId(Long albumId);
+
 }
 

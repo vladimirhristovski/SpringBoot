@@ -24,6 +24,39 @@
     <a href="/songs/add-song">
         Add new song
     </a>
+    <br>
+    <br>
+    <form action="/songs/filter" method="GET">
+        <div class="form-group">
+            <label>Album filter: </label>
+            <br>
+            <select name="albumId" class="form-control">
+                <option th:if="${selectedAlbum} != null"
+                        th:selected="${selectedAlbum != null && selectedAlbum.getId() == album.getId()}"
+                        th:each="album : ${albums}"
+                        th:value="${album.getId()}"
+                        th:text="${album.getName()}">
+                </option>
+                <option th:if="${selectedAlbum} == null"
+                        th:each="album : ${albums}"
+                        th:value="${album.getId()}"
+                        th:text="${album.getName()}">
+                </option>
+                <option th:if="${selectedAlbum} == null"
+                        th:value='-1'
+                        th:text="'Select an Album'"
+                        selected hidden>
+                </option>
+                <option th:if="${selectedAlbum} != null"
+                        th:value='-1'
+                        th:text="'None'">
+                </option>
+            </select>
+        </div>
+        <br>
+        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
     <th:block>
         <form th:action="@{/artist}" th:method="GET">
             <ul>

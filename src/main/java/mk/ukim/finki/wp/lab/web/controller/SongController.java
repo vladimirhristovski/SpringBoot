@@ -31,7 +31,9 @@ public class SongController {
         }
 
         List<Song> songs = songService.listSongs();
+        List<Album> albums = albumService.findAll();
         model.addAttribute("songs", songs);
+        model.addAttribute("albums", albums);
         return "listSongs";
     }
 
@@ -50,6 +52,20 @@ public class SongController {
                            @RequestParam Optional<Long> songId) {
         songService.save(title, genre, releaseYear, albumId, songId);
         return "redirect:/songs";
+    }
+
+    @GetMapping("/filter")
+    public String filterSongs(@RequestParam Long albumId, Model model) {
+        if(albumId == -1){
+            return "redirect:/songs";
+        }
+        List<Song> songs = songService.findByAlbumId(albumId);
+        List<Album> albums = albumService.findAll();
+        Optional<Album> selectedAlbum = albumService.findById(albumId);
+        model.addAttribute("songs", songs);
+        model.addAttribute("albums", albums);
+        model.addAttribute("selectedAlbum", selectedAlbum.get());
+        return "listSongs";
     }
 
     @GetMapping("/edit/{songId}")
