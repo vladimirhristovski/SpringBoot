@@ -5,7 +5,6 @@ import mk.ukim.finki.wp.lab.service.ArtistService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,6 +25,15 @@ public class ArtistController {
         List<Artist> artists = artistService.listArtists();
         model.addAttribute("artists", artists);
         model.addAttribute("trackId", trackId);
-        return "artistsList";
+        model.addAttribute("bodyContent", "artistsList");
+        return "master-template";
+    }
+
+    @GetMapping("/list")
+    public String getAllArtistsList(Model model) {
+        List<Artist> artists = artistService.listArtists();
+        model.addAttribute("artists", artists);
+        model.addAttribute("bodyContent", "listArtists");
+        return "master-template";
     }
 }

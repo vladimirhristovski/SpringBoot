@@ -34,14 +34,16 @@ public class SongController {
         List<Album> albums = albumService.findAll();
         model.addAttribute("songs", songs);
         model.addAttribute("albums", albums);
-        return "listSongs";
+        model.addAttribute("bodyContent", "listSongs");
+        return "master-template";
     }
 
     @GetMapping("/add-song")
     public String addProductPage(Model model) {
         List<Album> albums = albumService.findAll();
         model.addAttribute("albums", albums);
-        return "add-song";
+        model.addAttribute("bodyContent", "add-song");
+        return "master-template";
     }
 
     @PostMapping("/add")
@@ -56,7 +58,7 @@ public class SongController {
 
     @GetMapping("/filter")
     public String filterSongs(@RequestParam Long albumId, Model model) {
-        if(albumId == -1){
+        if (albumId == -1) {
             return "redirect:/songs";
         }
         List<Song> songs = songService.findByAlbumId(albumId);
@@ -65,7 +67,8 @@ public class SongController {
         model.addAttribute("songs", songs);
         model.addAttribute("albums", albums);
         model.addAttribute("selectedAlbum", selectedAlbum.get());
-        return "listSongs";
+        model.addAttribute("bodyContent", "listSongs");
+        return "master-template";
     }
 
     @GetMapping("/edit/{songId}")
@@ -75,7 +78,8 @@ public class SongController {
             List<Album> albums = albumService.findAll();
             model.addAttribute("albums", albums);
             model.addAttribute("song", song);
-            return "add-song";
+            model.addAttribute("bodyContent", "add-song");
+            return "master-template";
         }
         return "redirect:/songs?error=Song not found";
     }

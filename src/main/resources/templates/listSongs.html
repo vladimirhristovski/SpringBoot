@@ -1,98 +1,103 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <title>Songs Homepage - Welcome to My Music Store</title>
-    <style type="text/css">
-        body {
-            width: 800px;
-            margin: auto;
-        }
-    </style>
-</head>
-<body>
-<header>
-    <h1>Welcome to My Music Store</h1>
-</header>
+<th:block xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:if="${hasError}">
-    <div th:text="${error}" class="text-danger"></div>
-</th:block>
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>Songs Homepage - Welcome to My Music Store</title>
+        <style type="text/css">
+            body {
+                width: 800px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+    <header>
+        <h1>Welcome to My Music Store</h1>
+    </header>
 
-<main>
-    <h2>Choose a song:</h2>
-    <a href="/songs/add-song">
-        Add new song
-    </a>
-    <br>
-    <br>
-    <form action="/songs/filter" method="GET">
-        <div class="form-group">
-            <label>Album filter: </label>
-            <br>
-            <select name="albumId" class="form-control">
-                <option th:if="${selectedAlbum} != null"
-                        th:selected="${selectedAlbum != null && selectedAlbum.getId() == album.getId()}"
-                        th:each="album : ${albums}"
-                        th:value="${album.getId()}"
-                        th:text="${album.getName()}">
-                </option>
-                <option th:if="${selectedAlbum} == null"
-                        th:each="album : ${albums}"
-                        th:value="${album.getId()}"
-                        th:text="${album.getName()}">
-                </option>
-                <option th:if="${selectedAlbum} == null"
-                        th:value='-1'
-                        th:text="'Select an Album'"
-                        selected hidden>
-                </option>
-                <option th:if="${selectedAlbum} != null"
-                        th:value='-1'
-                        th:text="'None'">
-                </option>
-            </select>
-        </div>
-        <br>
-        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
-    <th:block>
-        <form th:action="@{/artist}" th:method="GET">
-            <ul>
-                <li th:each="song : ${songs}">
-                    <input type="radio" name="trackId" th:value="${song.getId()}"/>
-                    Title:
-                    <th:block th:text="${song.getTitle()}"></th:block>
-                    <br>
-                    Genre:
-                    <th:block th:text="${song.getGenre()}"></th:block>
-                    <br>
-                    Release Year:
-                    <th:block th:text="${song.getReleaseYear()}"></th:block>
-                    <br>
-                    Album:
-                    <th:block th:text="${song.getAlbum().getName()}"></th:block>
-                    <br>
-                    <th:block>
-                        <a th:href="@{'/songs/edit/{id}' (id=${song.getId()})}"
-                           class="edit-song">
-                            <i>Edit</i>
-                        </a>
-                    </th:block>
-                    <br>
-                    <th:block>
-                        <a th:href="@{'/songs/delete/{id}' (id=${song.getId()})}"
-                           class="delete-song">
-                            <i>Delete</i>
-                        </a>
-                    </th:block>
-                    <br>
-                </li>
-            </ul>
-            <button type="submit">Submit</button>
-        </form>
+    <th:block th:if="${hasError}">
+        <div th:text="${error}" class="text-danger"></div>
     </th:block>
-</main>
-</body>
-</html>
+
+    <main>
+        <h2>Choose a song:</h2>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/songs/add-song">
+                Add new song
+            </a>
+        </th:block>
+        <br>
+        <br>
+        <form action="/songs/filter" method="GET">
+            <div class="form-group">
+                <label>Album filter: </label>
+                <br>
+                <select name="albumId" class="form-control">
+                    <option th:if="${selectedAlbum} != null"
+                            th:selected="${selectedAlbum != null && selectedAlbum.getId() == album.getId()}"
+                            th:each="album : ${albums}"
+                            th:value="${album.getId()}"
+                            th:text="${album.getName()}">
+                    </option>
+                    <option th:if="${selectedAlbum} == null"
+                            th:each="album : ${albums}"
+                            th:value="${album.getId()}"
+                            th:text="${album.getName()}">
+                    </option>
+                    <option th:if="${selectedAlbum} == null"
+                            th:value='-1'
+                            th:text="'Select an Album'"
+                            selected hidden>
+                    </option>
+                    <option th:if="${selectedAlbum} != null"
+                            th:value='-1'
+                            th:text="'None'">
+                    </option>
+                </select>
+            </div>
+            <br>
+            <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <th:block>
+            <form th:action="@{/artist}" th:method="GET">
+                <ul>
+                    <li th:each="song : ${songs}">
+                        <input type="radio" name="trackId" th:value="${song.getId()}"/>
+                        Title:
+                        <th:block th:text="${song.getTitle()}"></th:block>
+                        <br>
+                        Genre:
+                        <th:block th:text="${song.getGenre()}"></th:block>
+                        <br>
+                        Release Year:
+                        <th:block th:text="${song.getReleaseYear()}"></th:block>
+                        <br>
+                        Album:
+                        <th:block th:text="${song.getAlbum().getName()}"></th:block>
+                        <br>
+                        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a th:href="@{'/songs/edit/{id}' (id=${song.getId()})}"
+                               class="edit-song">
+                                <i>Edit</i>
+                            </a>
+                        </th:block>
+                        <br>
+                        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a th:href="@{'/songs/delete/{id}' (id=${song.getId()})}"
+                               class="delete-song">
+                                <i>Delete</i>
+                            </a>
+                        </th:block>
+                        <br>
+                    </li>
+                </ul>
+                <button type="submit">Submit</button>
+            </form>
+        </th:block>
+    </main>
+    </body>
+    </html>
+</th:block>
