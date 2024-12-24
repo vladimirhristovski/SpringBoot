@@ -7,9 +7,9 @@
             </div>
         </section>
 
-<!--        <div>-->
-<!--            <a href="/shopping-cart">Shopping Cart</a>-->
-<!--        </div>-->
+        <!--        <div>-->
+        <!--            <a href="/shopping-cart">Shopping Cart</a>-->
+        <!--        </div>-->
 
         <th:block th:if="${hasError}">
             <div th:text="${error}" class="text-danger"></div>
@@ -37,7 +37,7 @@
                                 <td th:text="${product.getCategory() != null}
                             ? ${product.getCategory().getName()} : 'No Category'"></td>
                                 <td class="text-right">
-                                    <th:block>
+                                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
                                         <form th:action="@{'/products/delete/{id}' (id=${product.getId()})}"
                                               th:method="DELETE">
                                             <button type="submit"
@@ -46,7 +46,7 @@
                                             </button>
                                         </form>
                                     </th:block>
-                                    <th:block>
+                                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a th:href="@{'/products/edit-form/{id}' (id=${product.getId()})}"
                                            class="btn btn-sm btn-info edit-product">
                                             <i class="fa fa-trash">Edit</i>
