@@ -34,7 +34,8 @@ public class ProductController {
         }
         List<Product> products = productService.findAll();
         model.addAttribute("products", products);
-        return "products";
+        model.addAttribute("bodyContent","products");
+        return "master-template";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -49,7 +50,8 @@ public class ProductController {
         List<Manufacturer> manufacturers = manufacturerService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("manufacturers", manufacturers);
-        return "add-product";
+        model.addAttribute("bodyContent", "add-product");
+        return "master-template";
     }
 
     @GetMapping("/edit-form/{id}")
