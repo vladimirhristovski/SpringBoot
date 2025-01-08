@@ -55,9 +55,9 @@ public class VebProgramiranjeApplicationTests {
                         .param("pageSize", "10"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-//				.andExpect(model().attributeExists("page"))
-//				.andExpect(model().attributeExists("manufacturers"))
-//				.andExpect(model().attributeExists("categories"))
+				.andExpect(model().attributeExists("page"))
+				.andExpect(model().attributeExists("manufacturers"))
+				.andExpect(model().attributeExists("categories"))
                 .andExpect(model().attribute("bodyContent", "products"))
                 .andExpect(view().name("master-template"));
     }

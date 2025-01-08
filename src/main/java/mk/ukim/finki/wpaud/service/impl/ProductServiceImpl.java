@@ -9,11 +9,18 @@ import mk.ukim.finki.wpaud.repository.jpa.CategoryRepository;
 import mk.ukim.finki.wpaud.repository.jpa.ManufacturerRepository;
 import mk.ukim.finki.wpaud.repository.jpa.ProductRepository;
 import mk.ukim.finki.wpaud.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static mk.ukim.finki.wpaud.service.specifications.FieldFilterSpecification.filterContainsText;
+import static mk.ukim.finki.wpaud.service.specifications.FieldFilterSpecification.filterEquals;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -32,6 +39,17 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAll() {
         return productRepository.findAll();
     }
+
+    @Override
+    public Page<Product> findPage(String name, Long categoryId, Long manufacturerId, Integer pageNum, Integer pageSize) {
+        Specification<Product> specification = Specification
+                .where(filterContainsText(Product.class, "name", name))
+                .and(filterEquals(Product.class, "category.id", categoryId))
+                .and(filterEquals(Product.class, "manufacturer.id", manufacturerId));
+
+        return this.productRepository.findAll(specification,PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "name")));
+    }
+
 
     @Override
     public Optional<Product> findById(Long id) {

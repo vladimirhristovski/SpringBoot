@@ -6,6 +6,7 @@ import mk.ukim.finki.wpaud.model.Product;
 import mk.ukim.finki.wpaud.service.CategoryService;
 import mk.ukim.finki.wpaud.service.ManufacturerService;
 import mk.ukim.finki.wpaud.service.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,13 +29,27 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getProductPage(@RequestParam(required = false) String error, Model model) {
+    public String getProductPage(
+            @RequestParam(required = false) String error,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long manufacturerId,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            Model model
+    ) {
         if (error != null && !error.isEmpty()) {
             model.addAttribute("hasError", true);
             model.addAttribute("error", error);
         }
-        List<Product> products = productService.findAll();
-        model.addAttribute("products", products);
+        Page<Product> page = this.productService.findPage(name, categoryId, manufacturerId, pageNum, pageSize);
+        model.addAttribute("page", page);
+        model.addAttribute("manufacturers", this.manufacturerService.findAll());
+        model.addAttribute("categories", this.categoryService.listCategories());
+        model.addAttribute("name", name);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("manufacturerId", manufacturerId);
+
         model.addAttribute("bodyContent", "products");
         return "master-template";
     }
