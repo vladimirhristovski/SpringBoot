@@ -80,6 +80,7 @@ public class DataHolder {
         users = new ArrayList<>();
         if (this.userRepository.count() == 0) {
             users.add(new User("vladimir.hristovski", passwordEncoder.encode("vh"), "Vladimir", "Hristovski", Role.ROLE_USER));
+            users.add(new User("mod", passwordEncoder.encode("mod"), "mod", "mod", Role.ROLE_MODERATOR));
             users.add(new User("admin", passwordEncoder.encode("admin"), "admin", "admin", Role.ROLE_ADMIN));
             this.userRepository.saveAll(users);
         }

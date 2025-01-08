@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/songs", "/songs/filter**", "/albums", "/artist/list", "/assets/**", "/register")
                         .permitAll()
+                        .requestMatchers("/songs/edit/**", "/songs/delete/**", "/songs/add").hasRole("MODERATOR")
                         .requestMatchers("/songs/edit/**", "/songs/delete/**", "/songs/add-song", "/songs/add", "/songs").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
